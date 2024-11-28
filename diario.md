@@ -90,5 +90,33 @@ Non avendo più tempo faccio il push --> il file RAW_recipes è troppo grande
 ### Cosa ho fatto davvero
 
 Per prima cosa sono tornato alla precedente versone con _git reset HEAD@{1}_ e
-ho inserito il file incriminato (RAW\*recipes.csv) in _.gitignore_
-Poi ho fatto un commit
+ho inserito il file incriminato (RAWrecipes.csv) in .gitignore
+Poi ho fatto un commit. Ho iniziato a provare a risolvere il problema delle liste
+
+## 28 Novembre 2024
+
+**Obiettivi**:Continuare analisi dataset ricette e spostare i dataset
+in un servizio come <https://figshare.com/>
+
+### Cosa ho fatto davvero
+
+Ho risolto il problema delle liste prese come stringhe.
+Ora voglio trovare gli ingredienti che hanno i valori nutrizionali
+per farlo potrei:
+
+1. usare list.eval() per controllare che ogni elemento della lista sia nel
+   secondo dataset (con join)
+2. usare list.explode() per creare una colonna con tutti gli ingredienti e
+   onfrontarla con il dataset nutri
+   Scelgo la seconda per cominciare perché posso vedere gli ingredienti che mancano
+   e capire se sono scritti in modo diverso (es: hard-cooked eggs è sempre eggs)
+   Il problema è che ci sono pochi file in cui si ripete il nome
+   Cambiando leggermente metodo ne ho 8.000 su 22.000, buono. Ora voglio capire
+   quali ricette non hanno match ma non riesco a capire come fare
+
+Sto provando inoltre a risolvere il problema di come gestire i file:
+
+- potrei usare i siti consigliati ma ho paura ci sia un problema di diritti di autore
+- protrei usare le api di kaggle ma si deve fare il login, funziona solo su
+  questa macchina credo
+- potrei usare git lfs ma non ci ho capito molto
