@@ -107,7 +107,7 @@ per farlo potrei:
 1. usare list.eval() per controllare che ogni elemento della lista sia nel
    secondo dataset (con join)
 2. usare list.explode() per creare una colonna con tutti gli ingredienti e
-   onfrontarla con il dataset nutri
+   confrontarla con il dataset nutri
    Scelgo la seconda per cominciare perché posso vedere gli ingredienti che mancano
    e capire se sono scritti in modo diverso (es: hard-cooked eggs è sempre eggs)
    Il problema è che ci sono pochi file in cui si ripete il nome
@@ -120,3 +120,13 @@ Sto provando inoltre a risolvere il problema di come gestire i file:
 - protrei usare le api di kaggle ma si deve fare il login, funziona solo su
   questa macchina credo
 - potrei usare git lfs ma non ci ho capito molto
+
+## 9 Dicembre 2024
+
+**Obiettivi**: Provare a creare un po' il sito
+
+### Cosa ho fatto davvero
+
+## todos
+
+- aggiungere settings colore
