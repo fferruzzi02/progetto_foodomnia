@@ -27,6 +27,7 @@ Dataset con le informazioni nutrizionali dei vari cibi -> nome variabile = nutri
 
 > Utsav Dey. (2024). Food Nutrition Dataset [Data set]. Kaggle. <https://doi.org/10.34740/KAGGLE/DSV/8820139>
 
-Dataset ricette
+Dataset ricette -> nome variabile = rec
 
-> Shuyang Li. (2019). Food.com Recipes and Interactions [Data set]. Kaggle. <https://doi.org/10.34740/KAGGLE/DSV/783630>
+Author Name: Shuyang Li
+Bio: PhD Researcher @ UC San Diego
