@@ -127,6 +127,22 @@ Sto provando inoltre a risolvere il problema di come gestire i file:
 
 ### Cosa ho fatto davvero
 
+Schema cartaceo del sito
+
+## 12 Dicembre 2024
+
+**Obiettivi**: Provare a creare un po' il sito e selezionare dataset
+
+### Cosa ho fatto davvero
+
+Selezione dataset (finally) e creazione functions.py per gestire funzioni da riciclare
+Creazione funzioni specifiche in datasets per pulire i dataset e selezionari con
+una funzione.
+
+**Commenti e problemi**:
+Non riesco a far visualizzare una lista di ricette.
+errore per dei simboli specifici
+
 ## todos
 
 - aggiungere settings colore
