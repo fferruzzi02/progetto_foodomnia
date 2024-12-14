@@ -143,6 +143,18 @@ una funzione.
 Non riesco a far visualizzare una lista di ricette.
 errore per dei simboli specifici
 
+## 14 Dicembre 2024
+
+**Obiettivi**: Continuare a creare la struttura del sito
+
+### Cosa ho fatto davvero
+
+Video di 2 ore su streamlit
+Creato e ricreato la struttura delle pagine. Sono finalmente venuto a capo dei link
+e del fare una multipage app. So come girare tra le pagine
+Ho provato ad aggiungere le setting colore ma non le prende per qualche ragione.
+Beh ho risolto l'errore che mi dava eliminando la riga dal dataset...magic
+
 ## todos
 
 - aggiungere settings colore

@@ -1,7 +1,9 @@
 import polars as pl
+import streamlit as st
 #import kagglehub #? perché ??? Ha senso usare questo o è un problema se i dati vengono cambiati???
 
 #todo: funzione per ottenere il dataset con info valori nutrizionali ingredienti
+#@st.cache_data
 def get_nutri():
     #*i dataset sono 5 con le stesse colonne ma righe diverse
     #per primo leggo i 5 datasets 
@@ -36,6 +38,7 @@ print(nutri.head()) #ora ho solo le colonne necessarie
 """
 
 #todo: funzione per ottenere file ricette
+#@st.cache_data
 def get_rec():
     rec = pl.read_csv("recipes.csv") #prendo il dataset 
     #ho il problema che il type delle colonne con liste è String 
@@ -49,7 +52,10 @@ def get_rec():
 
 if __name__ == '__main__':
     nutri = get_nutri()
+    print("nutri")
     rec = get_rec()
+    print("rec")
+    
 """
 rec = pl.read_csv("recipes.csv") #prendo il dataset 
 
