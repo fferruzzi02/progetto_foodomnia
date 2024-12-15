@@ -3,7 +3,7 @@ import polars as pl
 import datasets
 import icecream as ic
 
-#todo: funzione per il rendering di una lista di ricette
+#*funzione per il rendering di una lista di ricette
 def recipes_list(filter:list|str|None = None,col: str|None = None)-> list:  
     #funzione che riceve in input il filtro e il nome della colonna in cui filtrare 
     #quindi se metto come filtro lista di tag dovrò specificare che deve cercare nella colonna tag
@@ -18,15 +18,24 @@ def recipes_list(filter:list|str|None = None,col: str|None = None)-> list:
 
 
 
-#todo: funzione per il rendering di una ricetta
-def select_recipe(name: str):
-    rec = datasets.get_rec()
-    if name == "random":
-        t = rec.sample(1, with_replacement=True)
+#*funzione che seleziona una ricetta
+def select_recipe(name: str) -> dict:
+    #funzione che ritorna il dizionario con tutti gli elementi di una ricetta 
+    rec = datasets.get_rec() 
+    if name == "random": #se devo prendere una ricetta random 
+        r = rec.sample(1, with_replacement=True) #uso funzione sample di polars (senza scomodare random)
     else: 
-        t = rec.filter(pl.col("name") == name)
-        ic(t)
-    return t
+        r = rec.filter(pl.col("name") == name) #altrimenti trovo la ricetta con quel nome
+    #creo il dizionario con tutte le info
+    recipe = {"name"  : r["name"].to_list()[0],
+          "description": r["description"].to_list()[0], 
+          "ingredients": r["ingredients_raw_str"].to_list()[0], 
+          "serving_size": r["serving_size"].to_list()[0], 
+          "servings": r["servings"].to_list()[0], 
+          "steps": r["steps"].to_list()[0], 
+          "tags": r["tags"].to_list()[0],
+          "search_terms": r["search_terms"].to_list()[0]}
+    return recipe
 
 if __name__ == '__main__':
     #*prova di recipes_list

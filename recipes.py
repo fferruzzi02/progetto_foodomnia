@@ -8,5 +8,8 @@ st.title("list of recipes")
 lst = functions.recipes_list()
 
 for i in range(10):
-    st.write(lst[i])
+    st.button(lst[i], key = lst[i], help = f"{lst[i]} recipe")
+
+    
+
 

@@ -3,7 +3,7 @@ import streamlit as st
 #import kagglehub #? perché ??? Ha senso usare questo o è un problema se i dati vengono cambiati???
 
 #todo: funzione per ottenere il dataset con info valori nutrizionali ingredienti
-#@st.cache_data
+@st.cache_data
 def get_nutri():
     #*i dataset sono 5 con le stesse colonne ma righe diverse
     #per primo leggo i 5 datasets 
@@ -19,26 +19,8 @@ def get_nutri():
     return nutri
 
 
-#!Igore: analisi dataset nutri #*i dataset sono 5 con le stesse colonne ma righe diverse
-"""#per primo leggo i 5 datasets  
-nutri1 = pl.read_csv("nutri/FOOD-DATA-GROUP1.csv")
-nutri2 = pl.read_csv("nutri/FOOD-DATA-GROUP2.csv")
-nutri3 = pl.read_csv("nutri/FOOD-DATA-GROUP3.csv")
-nutri4 = pl.read_csv("nutri/FOOD-DATA-GROUP4.csv")
-nutri5 = pl.read_csv("nutri/FOOD-DATA-GROUP5.csv")
-#poi li concateno in uno unico, così ho una sola tabella, tanto la divisione non mi serve 
-nutri = pl.concat([nutri1,nutri2,nutri3,nutri4,nutri5])
-nutri = nutri.select(pl.col("*").exclude(nutri.columns[0], nutri.columns[1]))
-#studiamo un po' il dataset unico
-print(nutri.glimpse(return_as_string=True)) 
-print(nutri.describe()) #controllo, non ci sono valori null, le colonne sono numeriche tranne il nome del cibo (ovviamente)
-#l'unica cosa di troppo (avendo concatenato i dataset) sono le prime due colonne di indici, le rimuovo
-nutri = nutri.select(pl.col("*").exclude(nutri.columns[0], nutri.columns[1]))
-print(nutri.head()) #ora ho solo le colonne necessarie
-"""
-
 #todo: funzione per ottenere file ricette
-#@st.cache_data
+@st.cache_data
 def get_rec():
     rec = pl.read_csv("recipes.csv") #prendo il dataset 
     #ho il problema che il type delle colonne con liste è String 
@@ -51,17 +33,12 @@ def get_rec():
 
 
 if __name__ == '__main__':
+    #*controllo
     nutri = get_nutri()
     print("nutri")
     rec = get_rec()
     print("rec")
     
-"""
-rec = pl.read_csv("recipes.csv") #prendo il dataset 
-
-print(rec.head())
-print(rec.dtypes) 
-print(rec.columns) #perfetto 
 
 
 rec = pl.read_csv("recipes.csv")
@@ -82,7 +59,22 @@ print(rec.head())
 print(rec.dtypes) 
 print(rec.columns) #perfetto
 
+dem = pl.read_csv("Demonyms.csv")
 
+dem.describe()
+
+search = rec.select(pl.col("search_terms").list.explode()).unique()
+search = search["search_terms"].to_list()
+type(search)
+demonyms = dem["Demonym"].to_list()
+
+
+states_dishes =[]
+
+for el in search:
+    if el in demonyms.lower():
+        print("a")
+        states_dishes.append(el)
 
 #todo: confronto due datasets 
 rec.with_columns(contains=pl.col("ingredients").list.contains("eggs")).filter(pl.col("contains") == "true")
@@ -145,4 +137,3 @@ print(rec.select("nutrition"))
 
 
 
-"""

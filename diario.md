@@ -155,6 +155,22 @@ e del fare una multipage app. So come girare tra le pagine
 Ho provato ad aggiungere le setting colore ma non le prende per qualche ragione.
 Beh ho risolto l'errore che mi dava eliminando la riga dal dataset...magic
 
+## 15 Dicembre 2024
+
+**Obiettivi**: Continuare a creare la struttura del sito
+
+### Cosa ho fatto davvero
+
+Sono andato molto avanti con la struttura del sito, sistemando diverse pagine.
+Ho fatto la searchbar dell'homepage, la struttura di una ricetta e sistemato le funzioni
+
+**Commenti e problemi**:
+Ora ho il problema che le ricette sono troppe, voglio quindi filtrarle
+Stavo iniziando a selezionare per stato (così faccio mappa). Manca mettere
+tutto il lowercase nelle liste, sennò fa casino (cerca metodo di polars)
+Potrei filtrare in altri modi, tipo tags utili o eliminando ricette corte...
+Devo leggermi i tags e i search_terms
+
 ## todos
 
 - aggiungere settings colore
