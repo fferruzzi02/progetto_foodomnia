@@ -171,6 +171,29 @@ tutto il lowercase nelle liste, sennò fa casino (cerca metodo di polars)
 Potrei filtrare in altri modi, tipo tags utili o eliminando ricette corte...
 Devo leggermi i tags e i search_terms
 
+## 18 Dicembre 2024
+
+**Obiettivi**: Filtrare e sistemare dataset
+
+### Cosa ho fatto davvero
+
+Sto cercando di filtrare il dataset eliminando righe inutili. Sto studiando i tags
+e i search_terms, li unirò per semplicità.
+Volevo filtrare tenendo le righe che hanno lo stato del piatto, così da fare
+una mappa cliccabile.
+Ho filtrato per i tag il dataset, modificandone alcuni
+
+**Commenti e problemi**:
+
 ## todos
 
 - aggiungere settings colore
+- guarda percorsi assoluti
+- guarda per references (magari in piccolo sul sito)
+
+## domande
+
+- virgole in recipes
+- numerosità ricette
+- personalizzazione grafica con HTML
+- download datasets
