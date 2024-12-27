@@ -1,5 +1,7 @@
 import streamlit as st
 import functions
+from map import map 
+
 st.title("FOODOMNIA")
 
 lst = functions.recipes_list()
@@ -19,5 +21,15 @@ if st.button("recipes list"):
     st.switch_page("recipes.py")
 
 
+fig = map()
+event = st.plotly_chart(fig, on_select="rerun", selection_mode=["points", "box", "lasso"])
+
+"""points = event["selection"].get("points", [])
+    if points:
+        first_point = points[0]
+        sigla = first_point["properties"].get("sigla", None)
+    else:
+        sigla = None
+    """
 
 

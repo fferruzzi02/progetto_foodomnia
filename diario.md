@@ -183,7 +183,11 @@ Volevo filtrare tenendo le righe che hanno lo stato del piatto, così da fare
 una mappa cliccabile.
 Ho filtrato per i tag il dataset, modificandone alcuni
 
-**Commenti e problemi**:
+## 27 Dicembre 2024
+
+**Obiettivi**: continuare a filtrare dataset per tags et similia
+
+### Cosa ho fatto davvero
 
 ## todos
 
