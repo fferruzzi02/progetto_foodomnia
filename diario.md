@@ -189,6 +189,14 @@ Ho filtrato per i tag il dataset, modificandone alcuni
 
 ### Cosa ho fatto davvero
 
+Dopo circa 3 ore sono riuscito a fare la mappa (anche se devo ancora capire come
+renderla cliccabile). Ho prima provato a disegnarla con i metodi fatti,
+ma ho poi scoperto che plotly.express funziona senza dover importare mappe se
+si usa il globo. Molto divertente.
+Ho continuato a lavorare sul file dataset.py, devo finire analisi tags
+e scrivere funzione che mi permetta di filtrare per tags. Ho in parte sistemato
+get_rec()
+
 ## todos
 
 - aggiungere settings colore
