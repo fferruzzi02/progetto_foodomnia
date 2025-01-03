@@ -2,12 +2,11 @@
 import polars as pl
 import datasets
 import streamlit as st
-#*funzione per il rendering di una lista di ricette
-def recipes_list(filter:list|str|None = None,filter_col: str|None = None)-> list:  
-    #funzione che riceve in input il filtro e il nome della colonna in cui filtrare 
-    #quindi se metto come filtro lista di tag dovrò specificare che deve cercare nella colonna tag
-    #non mi serve inserire vincoli su col perché non è controllato dallo user
-    #specifico io ogni volta in cui faccio una call alla funzione
+
+#todo: funzione per il rendering di una lista di ricette
+def recipes_list(filter:list|str|None = None,filter_col: str|None = None)-> list:  #*ritorna lista ricette
+    #riceve in input il filtro e il nome della colonna in cui filtrare
+        #quindi se metto come filtro lista di tag dovrò specificare che deve cercare nella colonna tag
     rec = datasets.get_rec()
     if filter != None: #se non ci sono filtri inserisco tutte le ricette
         #!da modificare, il filtro per lista con cella che è
@@ -15,17 +14,29 @@ def recipes_list(filter:list|str|None = None,filter_col: str|None = None)-> list
     lst = rec["name"].to_list() 
     return lst
 
-#*funzione che crea pulsante tag che quando viene premuto porta alla pagina recipes con liste filtrate
-def tag(tag:str):
+#todo: funzione che crea pulsante tag che quando viene premuto porta alla pagina recipes con liste filtrate
+def tag(tag:str): 
     rec = datasets.get_rec()
     if st.button(tag):
         filtered = rec.filter(pl.col("tags").list.contains("tag"))
         lst = filtered["name"].to_list() 
         st.switch_page()
 
+#todo: funzione per selezionare i tags 
+def get_tags(unique: bool = True) -> list: #
+    #*ritorna la lista dei tags, pecificando se la voglio con tag unici o tutti i tags
+    rec = datasets.get_rec()
+    if unique: 
+        lst = rec.select(pl.col("tags").list.explode().unique())
+    else: 
+        lst = rec.select(pl.col("tags").list.explode())
+    lst = lst["tags"].to_list() #lista di python, più comoda
+    return lst
 
-#*funzione che riporta lista di una delle colonne con List(String)
-def col_list(col:str, filter:list|str|None = None,filter_col: str|None = None) ->list:
+
+#!ha senso?????
+#todo: funzione che riporta lista di una delle colonne con List(String)
+def col_list(col:str, filter:list|str|None = None,filter_col: str|None = None) ->list: 
     rec = datasets.get_rec()
     if filter != None: #se non ci sono filtri prendo tutte 
         #!da modificare, il filtro per lista con cella che è
@@ -35,9 +46,8 @@ def col_list(col:str, filter:list|str|None = None,filter_col: str|None = None) -
     lst = df[col].to_list()
     return lst
 
-#*funzione che seleziona una ricetta
-def select_recipe(name: str) -> dict:
-    #funzione che ritorna il dizionario con tutti gli elementi di una ricetta 
+#todo: funzione per selezionare una ricetta
+def select_recipe(name: str) -> dict:   #*ritorna il dizionario con tutti gli elementi di una ricetta 
     rec = datasets.get_rec() 
     if name == "random": #se devo prendere una ricetta random 
         r = rec.sample(1, with_replacement=True) #uso funzione sample di polars (senza scomodare random)
@@ -50,8 +60,7 @@ def select_recipe(name: str) -> dict:
           "serving_size": r["serving_size"].to_list()[0], 
           "servings": r["servings"].to_list()[0], 
           "steps": r["steps"].to_list()[0], 
-          "tags": r["tags"].to_list()[0],
-          "search_terms": r["search_terms"].to_list()[0]}
+          "tags": r["tags"].to_list()[0]}
     return recipe
 
 if __name__ == '__main__':

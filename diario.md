@@ -197,6 +197,28 @@ Ho continuato a lavorare sul file dataset.py, devo finire analisi tags
 e scrivere funzione che mi permetta di filtrare per tags. Ho in parte sistemato
 get_rec()
 
+## 31 Dicembre 2024
+
+**Obiettivi**: grafico
+
+### Cosa ho fatto davvero
+
+Ho continuato a sistemare le settings di map, provando a inserire colore per
+numero di ricette. Ho usato i ranghi per avere una scala colori lineare.
+Aggiornamento: Ho dimenticato di fare il commit, ops
+
+## 3 Gennaio 2024
+
+**Obiettivi**: continuare il grafico, sistemare la homepage
+
+### Cosa ho fatto davvero
+
+Anno nuovo, la mappa continua a farmi impazzire, daje.
+Provo a farla diventare interattiva. Aggiornamento: ci sono riuscito
+Aggiunti inoltre vari aspetti grafici e collegamenti tra pagine in homepage.
+Ho inserito 2 finestre in recipes e il un rating sistem in recipe.
+Ho modificato la funzione get_rec() aggiungendo tutta la parte di filtro.
+
 ## todos
 
 - aggiungere settings colore

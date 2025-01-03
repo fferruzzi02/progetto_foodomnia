@@ -2,10 +2,10 @@ import polars as pl
 import streamlit as st
 #import kagglehub #? perché ??? Ha senso usare questo o è un problema se i dati vengono cambiati???
 
-#todo: funzione per ottenere il dataset con info valori nutrizionali ingredienti
-#@st.cache_data
+#todo: funzione per ottenere il dataset info valori nutrizionali ingredienti
+#@st.cache_data #essendo le operazioni con polars costose
 def get_nutri():
-    #*i dataset sono 5 con le stesse colonne ma righe diverse
+    #i dataset sono 5 con le stesse colonne ma righe diverse
     #per primo leggo i 5 datasets 
     nutri1 = pl.read_csv("nutri/FOOD-DATA-GROUP1.csv")
     nutri2 = pl.read_csv("nutri/FOOD-DATA-GROUP2.csv")
@@ -18,24 +18,73 @@ def get_nutri():
     nutri = nutri.select(pl.col("*").exclude(nutri.columns[0], nutri.columns[1]))
     return nutri
 
-
-#todo: funzione per ottenere file ricette
-#@st.cache_data
+#todo: funzione per ottenere il dataset ricette
+#! da completare con filtering per tags etc
+#@st.cache_data #essendo le operazioni con polars costose
 def get_rec():
     rec = pl.read_csv("recipes.csv") #prendo il dataset 
+    
+    #*pulizia per colonna 
     rec = rec.with_columns(
         (pl.col("search_terms") + "," + pl.col("tags")).alias("tags"))
-    #unisco tags e search_terms, hanno lo stesso fine 
-    
+    #unisco tags e search_terms, sono simili e averli in due colonne non serve
     rec = rec.select(pl.col("*").exclude("search_terms")) #elimino search terms 
-    print(5)
+
     #ho il problema che il type delle colonne con liste è String + i tags hanno spazi e robaccia varia 
     #rimuovo gli elementi superflui per farlo diventare list(String)
     rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all(r"[\[\]'{}()]", "").str.split(","))
     rec = rec.with_columns(pl.col("serving_size").str.replace_all("g1()", "")) #non funziona più porco gesù
     rec = rec.with_columns(pl.col("tags").str.replace_all(r"[\[\]'\{\}\(\)\s]", "").str.split(","))
-    return rec
+    
+    #*pulizia per riga
+    #elimino righe con valori nulli
+    rec = rec.filter(pl.col("description").is_not_null()) #descrizioni null
 
+    #elimino ricette che non hanno tra i tags gli stati
+    dem = pl.read_csv("Demonyms.csv") #apro dataset 
+    search = rec.select(pl.col("tags").list.explode()).unique()
+    search = search["tags"].to_list()
+    demonyms = dem["Demonym"].to_list() 
+    lowercase_list = [item.lower() for item in demonyms] #in demonyms sono uppercase, in tags lowercase
+    tags =[] #lista di tags
+    for el in search:
+        if el in lowercase_list:
+            tags.append(el)  
+    states_dishes = []
+    for i in tags:
+        filtered_df = rec.filter(
+            pl.col("tags").list.contains(i))
+        states_dishes.extend(filtered_df["name"].to_list())
+    #tutti i piatti legati a uno stato 
+    rec = rec.filter(pl.col("name").is_in(states_dishes)) #mantengo solo i piatti legati a stati
+    
+    #ora elimino i piatti di tags che non mi interessano 
+    tag = ["household-cleansers","homeopathy-remedies","non-food-products"] #non voglio ricette omeopatiche e non ricette 
+    remove = []
+    for el in tag:
+        filtered_df = rec.filter(pl.col("tags").list.contains(el))
+        remove.extend(filtered_df["name"].to_list()) #raccolgo tutti i nomi di piatti legati a questi tags 
+
+    names = rec["name"].to_list() #lista completa nomi ricette
+    difference = [item for item in names if item not in remove] #tutti i piatti che voglio tenere
+
+    rec = rec.filter(pl.col("name").is_in(difference)) #filtro 
+
+    #*elimino o cambio tags per renderli più utili 
+    #sostituzione  
+    rep = [("southern-united-states", "american"), ("southwestern-united-states", "american"), ("northeastern-united-states", "american"), ("north-american", "american"), ("curries-indian", "curry"),("iranian-persian", "iranian"), ("jewish-sephardi","jewish"), ("simply-potatoes2","potatoes"), ("gluten-free-appetizers", "gluten-free"), ("meatless", "nomeat"), ("dietary", "diet"), ("healthy2", "healthy"), ("low-saturated-fat", "low-fat"), ("lowfat", "low-fat"), ("fat-free", "nofat"), ("sugarless", "nosugar"), ("sugar-free", "nosugar"), ("flourless", "gluten-free"), ("very-low-carbs", "low-carb"), ("carb-free", "nocarb"), ("noflour", "gluten-free")]
+    replace_dict = dict(rep) #creo dizionario con i cambi 
+
+    rec = rec.with_columns(
+        pl.col("tags").map_elements(
+            lambda tags: [replace_dict.get(tag, tag) for tag in tags] #cambio da tag sbagliato a tag giusto
+        ).alias("tags") 
+    )
+    #rimozione
+    delete = ["time-to-make", "high-in-something", "free-of-something", "less_thansql:name_topics_of_recipegreater_than", "time-to-make", "ThrowtheultimatefiestawiththissopaipillasrecipefromFood.com."]
+    rec = rec.with_columns(tags=pl.col("tags").list.set_difference(delete))
+    print(10)
+    return rec 
 
 
 if __name__ == '__main__':
