@@ -4,33 +4,60 @@ import functions
 st.title("list of recipes")
 st.divider()
 
-tab1, tab2 = st.tabs(["current research", "search something else"])
+#*widget per cercare ricette con filtri
+col1,col2 = st.columns([2,1])
+search = col1.toggle("search for something else")
 
-with tab1:
-    st.write("fagiolo")
-    if st.session_state.tags:
-        st.info(f"searching recipes for the following tags: {st.session_state.tags}")
-        #! voglio creare caricamento carino con posate e emoji varie 
-        st.write("ricetteeee")
-        #! completa 
-    elif st.session_state.servings:
+if col2.button("", help = "delete filters", icon = ":material/delete:"): #bottone per eliminare filtri 
+    search = False #chiudo search (anche se il toggle non cambia)
+    st.session_state.name = None
+    st.session_state.ingredients = []
+    st.session_state.servings = 0
+    st.session_state.steps = 0
+    st.session_state.tags = []
+
+filter = [st.session_state.name,st.session_state.ingredients,st.session_state.servings,st.session_state.steps,st.session_state.tags] #creo variabile filter (che poi uso per ricerca ricette)
+
+if search: #se schiacchio research apro research
+    functions.research()
+
+st.divider()
+
+#box informativi su filtri attivi 
+if st.session_state.name:
+        st.info(f"searching recipes containing '{st.session_state.name}' in the name")
+if st.session_state.steps:
+        st.info(f"searching recipes with {st.session_state.steps} steps")
+if st.session_state.servings:
         st.info(f"searching recipes with {st.session_state.servings} servings")
+if st.session_state.tags:
+            x = ""
+            x + (str(item) for item in st.session_state.tags)
+            st.info(f"searching recipes with the following tags: {x}")
+if st.session_state.ingredients:
+            x = ""
+            x + (str(item) for item in st.session_state.ingredients)
+            st.info(f"searching recipes with the following ingredients: {x}")
+
+if not any(filter):  #se non ci sono filtri 
+    st.info("no filter applied! Selecting 25 random recipes")
+    #seleziono random 25 ricette 
     st.divider()
+    
     lst = functions.recipes_list()
+    import random
+    for i in range(25):
+        index = random.randint(0, 80098)
+        st.button(lst[index], key = lst[index], help = f"{lst[index]} recipe")
 
-    for i in range(10):
-        st.button(lst[i], key = lst[i], help = f"{lst[i]} recipe")
 
 
-with tab2:
-    st.info("find the recipe for you!")
-    col1,col2, col3= st.columns([2,2,1])
-    col1.slider("number of portions", min_value=1, max_value=10)
-    col = ["name", "ingredients", "tags", "servings"]
-    selection = col2.segmented_control("filter", col)
-    col3.toggle("bb")
-    if selection:
-        st.write(selection)
+ #! voglio creare caricamento carino con posate e emoji varie 
+
+
+
+
+    
 
 
 

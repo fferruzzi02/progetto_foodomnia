@@ -219,6 +219,21 @@ Aggiunti inoltre vari aspetti grafici e collegamenti tra pagine in homepage.
 Ho inserito 2 finestre in recipes e il un rating sistem in recipe.
 Ho modificato la funzione get_rec() aggiungendo tutta la parte di filtro.
 
+## 5 Gennaio 2024
+
+**Obiettivi**: sistemare struttura pagine, sperimentare
+
+### Cosa ho fatto davvero
+
+Giornata produttiva. Ho finalmente fatto il carosello che cambia ogni 10 secondi,
+aggiungendo i tags e rendendoli cliccabili. Ho generalizzato la funzione per
+filtrare la lista delle ricette per tutti i parametri. Ho inoltre sistemato
+la pagina con la lista di ricette, aggiungendo una finestra interattiva per
+aggiungere filtri. Ho creato un file cose.py per aggiungere vari test.
+Lo ho aggiunto come finestra sul sito, facendo uno pseudo login, che finirò poi
+
+**Commenti e problemi**: Devo sistemare bene tutto, guardando i problemi vari.
+
 ## todos
 
 - aggiungere settings colore

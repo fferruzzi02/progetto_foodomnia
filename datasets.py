@@ -80,6 +80,9 @@ def get_rec():
             lambda tags: [replace_dict.get(tag, tag) for tag in tags] #cambio da tag sbagliato a tag giusto
         ).alias("tags") 
     )
+    #! dovrei specificare datatype ma se metto st.List[str] non va 
+    #!TypeError: 'DataTypeClass' object is not subscriptable
+
     #rimozione
     delete = ["time-to-make", "high-in-something", "free-of-something", "less_thansql:name_topics_of_recipegreater_than", "time-to-make", "ThrowtheultimatefiestawiththissopaipillasrecipefromFood.com."]
     rec = rec.with_columns(tags=pl.col("tags").list.set_difference(delete))
@@ -196,9 +199,8 @@ if __name__ == '__main__':
 
     fit3 = fit2.with_columns(
         pl.col("tags").map_elements(
-            lambda tags: [replace_dict.get(tag, tag) for tag in tags]
-        ).alias("tags")
-    )
+            lambda tags: [replace_dict.get(tag, tag) for tag in tags], return_dtype= pl.List(pl.Utf8)
+    ))
     for el in rep:
         fit3.filter(pl.col("tags").list.contains(el[0]))
     #done!

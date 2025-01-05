@@ -5,10 +5,18 @@ import streamlit as st
 #*inizializzo session state da subito, così non rischio problemi
 if "recipe" not in st.session_state:
     st.session_state.recipe = "random"
-if "tags" not in st.session_state:
-    st.session_state.tags = []
+if "name" not in st.session_state:
+    st.session_state.name = None
+if "ingredients" not in st.session_state:
+    st.session_state.ingredients = []
 if "servings" not in st.session_state:
     st.session_state.servings = 0
+if "steps" not in st.session_state:
+    st.session_state.steps = 0
+if "tags" not in st.session_state:
+    st.session_state.tags = []
+
+
 
 #*pagine
 homepage = st.Page(
@@ -29,10 +37,15 @@ ingredients = st.Page(
      )
 
 
+cose = st.Page(
+     "cose.py", title="cose di prova", icon=":material/accessible_forward:"
+     )
+
 st.sidebar.title("Actions")  
 if st.sidebar.button("I want a random recipe!"):
         st.session_state.recipe = "random"
         st.switch_page("recipe.py")
+
 if st.sidebar.button("LOGIN"):
      #st.switch_page("login")
      st.error("you thought it was a login, but it was me, Dio!")
@@ -40,15 +53,28 @@ if st.sidebar.button("LOGIN"):
 #!da fare login (forse)
 #*inserisco  nello state la possibilità di essere admin, come controllo per me per il sito
 if 'privilege' not in st.session_state:
-    st.session_state.privilege = "guest" #se voglio vedere che ci sia tutto cambio qui
+    st.session_state.privilege = "kapo" #se voglio vedere che ci sia tutto cambio qui
 #? potrei fare login solo per member, just to have fun
+  
+
+if st.session_state.privilege == "guest": 
+    if st.sidebar.button("",icon=":material/accessible_forward:"):
+        st.session_state.privilege = "kapo"
+        st.rerun()
+
+
+if st.session_state.privilege == "kapo": 
+    if st.sidebar.button("",icon=":material/accessibility:"):
+        st.session_state.privilege = "guest"
+        st.rerun()
 
 
 
-if st.session_state.privilege == "member":
-    pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe]})
+
 if st.session_state.privilege == "guest":
-    pg = st.navigation({"pages":[homepage, recipes,ingredients, recipe]})
+    pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe]})
+if st.session_state.privilege == "kapo":
+    pg = st.navigation({"pages":[homepage, recipes,ingredients, recipe, cose]})
 
 pg.run()
 
