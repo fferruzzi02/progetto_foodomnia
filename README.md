@@ -23,11 +23,8 @@ Tutti i dataset sono stati scaricati dal sito <https://www.kaggle.com>
 
 ### Citations
 
-Dataset con le informazioni nutrizionali dei vari cibi -> nome variabile = nutri
-
-> Utsav Dey. (2024). Food Nutrition Dataset [Data set]. Kaggle. <https://doi.org/10.34740/KAGGLE/DSV/8820139>
-
 Dataset ricette -> nome variabile = rec
 
 Author Name: Shuyang Li
 Bio: PhD Researcher @ UC San Diego
+link: <https://www.kaggle.com/datasets/shuyangli94/foodcom-recipes-with-search-terms-and-tags/data>

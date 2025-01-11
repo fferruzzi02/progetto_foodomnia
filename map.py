@@ -9,7 +9,7 @@ import functions
 def map():
     #parto dal dataset con Stati e demonimi
     dem = pl.read_csv("Demonyms.csv") 
-    search = functions.get_lst("tags", unique = False) #lista tag 
+    search = functions.get_tags() #lista tag 
     demonyms = dem["Demonym"].to_list() #lista demonimi 
     sta = dem["State"].to_list() #lista stati 
     lc_demonyms = [item.lower() for item in demonyms] #in minuscolo perché i tags sono in minuscolo

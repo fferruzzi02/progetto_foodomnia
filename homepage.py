@@ -19,14 +19,11 @@ if search_query:  #per controllare se è stato inserito qualcosa
 
 #*tasti navigazione rapida
 st.divider()
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 if col1.button("recipes list"): #porta alla pagina con lista ricette
     st.switch_page("recipes.py")
 if col2.button("recipes by ingredients"):
     st.switch_page("ingredients.py")
-if col3.button("random recipe"):
-    st.session_state.recipe = "random"
-    st.switch_page("recipe.py")
 
 #*mappa
 st.divider()
@@ -42,7 +39,11 @@ if event["selection"]["points"]: #se viene selezionato qualcosa
     if t[3]: #se ci sono ricette di quello stato 
         st.info(f"you want some {t[1]} recipes?") 
         if st.button("click here!"):#se clicco
-            st.session_state.tags = [t[1]] 
+            st.session_state.tags = [str(t[1])] 
             st.switch_page("recipes.py") #rimando alla pagina lista di ricette
     else:#se non ci sono 
         st.info(f"sorry we do not have {t[1]} recipes, try another state!")
+
+
+st.caption("""All the data are from https://www.kaggle.com/datasets/shuyangli94/foodcom-recipes-with-search-terms-and-tags/data
+           Author Name: Shuyang Li""")

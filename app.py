@@ -24,7 +24,7 @@ homepage = st.Page(
 )
 
 recipes = st.Page(
-     "recipes.py", title="Recipes", icon=":material/receipt_long:"
+     "recipes_list.py", title="Recipes", icon=":material/receipt_long:"
      )
 
 recipe = st.Page(
@@ -38,7 +38,7 @@ ingredients = st.Page(
 
 
 cose = st.Page(
-     "cose.py", title="cose di prova", icon=":material/accessible_forward:"
+     "cose.py", title="cose di prova", icon=":material/login:"
      )
 
 st.sidebar.title("Actions")  
@@ -53,18 +53,18 @@ if st.sidebar.button("LOGIN"):
 #!da fare login (forse)
 #*inserisco  nello state la possibilità di essere admin, come controllo per me per il sito
 if 'privilege' not in st.session_state:
-    st.session_state.privilege = "kapo" #se voglio vedere che ci sia tutto cambio qui
+    st.session_state.privilege = "logged" #se voglio vedere che ci sia tutto cambio qui
 #? potrei fare login solo per member, just to have fun
   
 
 if st.session_state.privilege == "guest": 
-    if st.sidebar.button("",icon=":material/accessible_forward:"):
-        st.session_state.privilege = "kapo"
+    if st.sidebar.button("",icon=":material/login:"):
+        st.session_state.privilege = "logged"
         st.rerun()
 
 
-if st.session_state.privilege == "kapo": 
-    if st.sidebar.button("",icon=":material/accessibility:"):
+if st.session_state.privilege == "logged": 
+    if st.sidebar.button("",icon=":material/logout:"):
         st.session_state.privilege = "guest"
         st.rerun()
 
@@ -73,7 +73,7 @@ if st.session_state.privilege == "kapo":
 
 if st.session_state.privilege == "guest":
     pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe]})
-if st.session_state.privilege == "kapo":
+if st.session_state.privilege == "logged":
     pg = st.navigation({"pages":[homepage, recipes,ingredients, recipe, cose]})
 
 pg.run()

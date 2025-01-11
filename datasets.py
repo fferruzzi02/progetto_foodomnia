@@ -1,6 +1,11 @@
 import polars as pl
 import streamlit as st
+import json
 #import kagglehub #? perché ??? Ha senso usare questo o è un problema se i dati vengono cambiati???
+x =  "['a', 'a']"
+
+
+json.loads(x.replace("'",'"'))
 
 #todo: funzione per ottenere il dataset info valori nutrizionali ingredienti
 #@st.cache_data #essendo le operazioni con polars costose
@@ -80,8 +85,6 @@ def get_rec():
             lambda tags: [replace_dict.get(tag, tag) for tag in tags] #cambio da tag sbagliato a tag giusto
         ).alias("tags") 
     )
-    #! dovrei specificare datatype ma se metto st.List[str] non va 
-    #!TypeError: 'DataTypeClass' object is not subscriptable
 
     #rimozione
     delete = ["time-to-make", "high-in-something", "free-of-something", "less_thansql:name_topics_of_recipegreater_than", "time-to-make", "ThrowtheultimatefiestawiththissopaipillasrecipefromFood.com."]
@@ -95,10 +98,8 @@ if __name__ == '__main__':
     nutri = get_nutri()
     print("nutri")
     rec = get_rec()
-    print("rec")
+    print(rec)
     
-
-
     rec = pl.read_csv("recipes.csv")
     print(rec.head())
     print(rec.dtypes) 
@@ -107,14 +108,24 @@ if __name__ == '__main__':
     rec = rec.with_columns(
         (pl.col("search_terms") + "," + pl.col("tags")).alias("tags"))
     
-    rec = rec.select(pl.col("*").exclude("search_terms"))
+    rec = rec.select(pl.col("*").exclude("search_terms")) 
     #!devo trasformare ingredients,  ingredients_raw_str, 'steps', 'tags'
     rec.select("serving_size") #ho un altro problema, qui dati doppi, ma posso eliminare 1 e le parentesi
     rec.select("tags") #qui usa pure graffe, posso tenere lista 
 
     print(rec.select(pl.col("ingredients").cast(pl.List,strict=False))) #se provo a trasformare mi crea valori null
+    
 
-    rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all(r"[\[\]'{}()]", "").str.split(","))
+    rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all("'",'"'))
+
+    reccc = rec.with_columns(
+        pl.col("ingredients").apply(
+            lambda ingredients: [json.loads(ingr) for ingr in ingredients]
+    ))
+    reccc = rec.with_columns(
+    rec["ingredients"].apply(json.loads)
+)
+
     rec = rec.with_columns(pl.col("serving_size").str.replace_all("g1()", "")) #non funziona più porco gesù
     rec = rec.with_columns(pl.col("tags").str.replace_all(r"[\[\]'\{\}\(\)\s]", "").str.split(","))
 

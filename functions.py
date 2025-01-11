@@ -1,24 +1,26 @@
 import polars as pl
 import datasets
 import streamlit as st
+import icecream as ic 
 
-#* funzioni utili per rendere più leggibile il codice nelle pagine
+#* funzioni utili e riciclabili per rendere più leggibile il codice nelle pagine
 
-
-#?così scritta male? 
 #todo: funzione per il rendering di una lista di ricette
-#filter:list|str|None = None,filter_col: str|None = None)
 def recipes_list(filter:list[str|None,list,int|None,int|None,list] =None)-> list:  #*ritorna lista ricette
-    #*filter è una lista con i filtri delle colonne in ordine 
+    #*filter è una lista con i filtri delle colonne in ordine
 
     rec = datasets.get_rec()
     if filter: #se non ci sono filtri inserisco tutte le ricette
         if filter[0]: #name -> filtro per lettera
             rec = rec.filter(pl.col("name").str.contains(filter[0]))
 
-        if filter[1]: #ingredients_raw_str -> filtro per ingredienti 
-            for i in range(len(filter[1])):
-                rec = rec.filter(pl.col("ingredients_raw_str").list.contains(filter[1][i]))
+        if filter[1]: #ingredients -> filtro per ingredienti, ma faccio ricette che abbiano any ingredient
+            names = []
+            for i in range(len(filter[1])): #per ogni ingrediente
+                na = rec.filter(pl.col("ingredients").list.contains(filter[1][i]))
+                names.extend(na["name"].to_list()) #colleziono tutti i nomi delle ricette che hanno quell'ingrediente
+            print(names)
+            rec = rec.filter(pl.col("name").is_in(names)) #alla fine filtro per tutte le ricette che hanno uno qualunque degli ingredienti 
 
         if filter[2]: #servings -> filtro per numero di porzioni
             rec = rec.filter(pl.col("servings") == filter[2])
@@ -34,21 +36,28 @@ def recipes_list(filter:list[str|None,list,int|None,int|None,list] =None)-> list
     return lst
 
 
-#todo: funzione per selezionare i tags/ gli ingredienti
-def get_lst(col: str, unique: bool = True) -> list: 
-    #*ritorna la lista dei tags o degli ingredienti 
-    #specifico se  voglio unique o no 
+#todo: funzione per selezionare i tags
+@st.cache_data 
+def get_tags() -> list: 
+    #*ritorna la lista dei tags 
     rec = datasets.get_rec()
-    if unique: 
-        lst = rec.select(pl.col(col).list.explode().unique())
-    else: 
-        lst = rec.select(pl.col(col).list.explode())
-    lst = lst[col].to_list() #lista di python, più comoda
-    return lst
+    tags = rec.select(pl.col("tags").list.explode())
+    tags = tags["tags"].to_list() #lista di python, più comoda
+    return tags
+
+#todo: funzione per selezionare gli ingredienti
+@st.cache_data 
+def get_ingr() -> list: 
+    #*ritorna la lista degli ingredienti 
+    rec = datasets.get_rec()
+    ingr = rec.select(pl.col("ingredients").list.explode().unique())
+    ingr = ingr["ingredients"].to_list() #lista di python, più comoda
+    return ingr
 
 
 #todo: funzione per selezionare una ricetta
-def select_recipe(name: str) -> dict:   #*ritorna il dizionario con tutti gli elementi di una ricetta 
+def select_recipe(name: str) -> dict:  
+    #*ritorna il dizionario con tutti gli elementi di una ricetta
     rec = datasets.get_rec() 
     if name == "random": #se devo prendere una ricetta random 
         r = rec.sample(1, with_replacement=True) #uso funzione sample di polars (senza scomodare random)
@@ -66,12 +75,15 @@ def select_recipe(name: str) -> dict:   #*ritorna il dizionario con tutti gli el
 
 
 #todo: funzione che crea un carosello per visualizzare i tags
-#! aggiungere immagini (forse)
 @st.fragment(run_every=10)
 #*fragment, così non devo rerunnare tutto ma solo un pezzo + cambia ogni 10 secondi 
 def carosel():
+    import icecream as ic 
     if st.session_state.button: #serve per cambiare pagina quando viene cliccato un pulsante tra i tag
-        st.switch_page("recipes.py") 
+        #! perché mannaggia la vita se non cambio pagina il session state è giusto mentre se la cambio si annulaaaaaaa
+        ic(st.session_state.tags)      #non si annulla nell'altra pagina, altrimenti qui sarebbe giusto  
+        st.switch_page("ingredients.py")
+
     
     import math         
     tags = [
@@ -86,7 +98,8 @@ def carosel():
     if "carosel" not in st.session_state: #per segnare le pagine del carosello
         st.session_state.carosel = int(0)
     
-    st.session_state.carosel = (st.session_state.carosel + 1) % len(tags) #così non supera mai 5 
+    if not st.session_state.button:
+        st.session_state.carosel = (st.session_state.carosel + 1) % len(tags)
 
     st.write(f"{titles[st.session_state.carosel]} recipes") 
 
@@ -95,15 +108,20 @@ def carosel():
     nrows = math.ceil(len(lst)/4)  #e calcolo le righe (arrotondo a intero superiore)
     col = st.columns(4) 
     count = 0 
+    def change_page(): #callback per i pulsanti
+        st.session_state.button = 1 #uso session state 
+    
     for nrow in range(nrows): #riempio griglia
         for ncol in range(4):
-            if count < len(lst):
+            if count < len(lst):          
+    
 
-                def change_page(): #callback per i pulsanti
-                       st.session_state.button = 1 #uso session state 
+                val = col[ncol].button(lst[count], on_click=change_page) #se clicco cambio pagina
+                if val: 
+                    st.session_state.tags = [str(lst[count])]
+                    st.rerun(scope = "fragment")
+                
 
-                st.session_state.tags = [lst[count]]
-                col[ncol].button(lst[count], on_click=change_page) #se clicco cambio pagina
                 count += 1
 
     #*pulsante per cambiare pagina del carosello
@@ -137,15 +155,17 @@ def research():
     if name:
         st.session_state.name = name
     
-    #per fare ricerca per ingredienti o tags prima chiedo per cosa si vuole cercare
-    col = ["ingredients", "tags"]
-    selection = col2.segmented_control("filter", col, selection_mode="multi")
+    tags = get_tags()
+    tg = col3.multiselect(f"select tags", tags)
+    if tg:
+        st.session_state.tags = tg
 
-    #poi apro multiselect 
-    if selection:
-        for col in selection: #1 se seleziono solo ingredients, 2 solo per tags
-            lst = get_lst(col)
-            col3.multiselect(f"select {col}", lst)
+    ingr = get_ingr()
+    ig = col3.multiselect(f"select ingredients", ingr)
+    if ig:
+        st.session_state.ingredients = ig
+
+
     
     if st.button("apply filters!"): #se applico i filtri faccio rerun di tutta l'app, così cerco ricette
          st.rerun(scope = "app")
@@ -160,11 +180,11 @@ if __name__ == '__main__':
     lst = recipes_list(filter = "eggs",col = "ingredients") 
     print(lst)"""
     #*prova di select_recipe
-    print(select_recipe("random"))
-    print(len(recipes_list(None)))
-    print(len(recipes_list([None, None, None, None, None])))
+    #print(select_recipe("random"))
+    #print(len(recipes_list(None)))
+    #print(len(recipes_list([None, None, None, None, None])))
 
-    print(len(recipes_list(["and", None, None, None, None])))
+    #print(len(recipes_list(["and", None, None, None, None])))
     print(len(recipes_list([None, ["onions"], None, None, None])))
     print(len(recipes_list([None, None, 2, None, None])))
     print(len(recipes_list([None, None, 2, 14, None])))

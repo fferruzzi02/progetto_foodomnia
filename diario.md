@@ -23,7 +23,7 @@ Le estensioni di VSCode usate attivamente in questo progetto sono le seguenti:
 - Window Colors (v1.0.51)
 - markdownlint (v0.57.0)
 
-**playlist di accompagnamento**: <https://open.spotify.com/playlist/4lFMHfo4EC2yAk30Rwz5U7?si=BaUrgNEZR5q2iM9xI-Wpjg&pi=e-lkwJgPk8Qg2d>
+**playlist di accompagnamento nella programmazione**: <https://open.spotify.com/playlist/4lFMHfo4EC2yAk30Rwz5U7?si=BaUrgNEZR5q2iM9xI-Wpjg&pi=e-lkwJgPk8Qg2d>
 
 ## 19 Novembre 2024
 
@@ -32,7 +32,7 @@ a github. Iniziare a guardare i dataset e fare le prime analisi
 
 ### Cosa ho fatto davvero
 
-Dopo aver deciso il progetto e i dati da utilizzare (<https://www.kaggle.com>),
+Dopo aver deciso il progetto e i dati da utilizzare (da <https://www.kaggle.com>),
 ho iniziato a preparare l'ambiente di lavoro.
 Creazione cartella progetto e inizializzazione di uv. Download di streamlit.
 Creazione repository di git e push su github (<https://github.com/fferruzzi02/progetto_foodomnia/activity>)
@@ -45,7 +45,6 @@ Creazione file datasets.py
 ## 20 Novembre 2024
 
 **Obiettivi**: Organizzare meglio il tutto, analizzare il primo dataset
-**Idee**:
 
 ### Cosa ho fatto davvero
 
@@ -69,14 +68,15 @@ ex post).
 Creazione file con impostazioni di markdown (.markdownlint.json) e del file
 .gitignore (che per qualche motivo non c'era già) per togliere impostazioni md.
 Ricerca dataset ricette. Il file che avevo trovato pesa 2.3 giga, mi manda in
-palla vscode.
+palla vscode, lol.
 Trovato questo:
 <https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions/data>
 Ma non so come aprire la mappa numeri-ingredienti -->
 provo a farli tornare normale (file try.py)
 In realtà mi sono impelagato nel nulla, nel file recipes RAW ci sono gli ingredienti
 Elimino tutti i file non necessari, rimango solo con RAW_recipes.csv
-Non avendo più tempo faccio il push --> il file RAW_recipes è troppo grande
+Non avendo più tempo faccio il push --> il file RAW_recipes è troppo grande, daje
+
 **Commenti e problemi**:
 
 1. Le liste di ingredienti e altre colonne sono prese come str invece che lista
@@ -127,7 +127,7 @@ Sto provando inoltre a risolvere il problema di come gestire i file:
 
 ### Cosa ho fatto davvero
 
-Schema cartaceo del sito
+Schema cartaceo del sito (l'importante è fare qualcosa dai...)
 
 ## 12 Dicembre 2024
 
@@ -137,7 +137,7 @@ Schema cartaceo del sito
 
 Selezione dataset (finally) e creazione functions.py per gestire funzioni da riciclare
 Creazione funzioni specifiche in datasets per pulire i dataset e selezionari con
-una funzione.
+una funzione. Un parto trasformare le righe di ingredienti e tags in liste.
 
 **Commenti e problemi**:
 Non riesco a far visualizzare una lista di ricette.
@@ -145,7 +145,7 @@ errore per dei simboli specifici
 
 ## 14 Dicembre 2024
 
-**Obiettivi**: Continuare a creare la struttura del sito
+**Obiettivi**: Continuare a creare la struttura del sito (ma vah)
 
 ### Cosa ho fatto davvero
 
@@ -162,14 +162,15 @@ Beh ho risolto l'errore che mi dava eliminando la riga dal dataset...magic
 ### Cosa ho fatto davvero
 
 Sono andato molto avanti con la struttura del sito, sistemando diverse pagine.
-Ho fatto la searchbar dell'homepage, la struttura di una ricetta e sistemato le funzioni
+Ho fatto la searchbar dell'homepage (che non è davvero una searchbar),
+la struttura di una ricetta e sistemato le funzioni
 
 **Commenti e problemi**:
 Ora ho il problema che le ricette sono troppe, voglio quindi filtrarle
 Stavo iniziando a selezionare per stato (così faccio mappa). Manca mettere
 tutto il lowercase nelle liste, sennò fa casino (cerca metodo di polars)
 Potrei filtrare in altri modi, tipo tags utili o eliminando ricette corte...
-Devo leggermi i tags e i search_terms
+Devo leggermi i tags e i search_terms, spasso
 
 ## 18 Dicembre 2024
 
@@ -181,7 +182,7 @@ Sto cercando di filtrare il dataset eliminando righe inutili. Sto studiando i ta
 e i search_terms, li unirò per semplicità.
 Volevo filtrare tenendo le righe che hanno lo stato del piatto, così da fare
 una mappa cliccabile.
-Ho filtrato per i tag il dataset, modificandone alcuni
+Ho filtrato per i tag il dataset(dopo averne letti circa 2000), modificandone alcuni
 
 ## 27 Dicembre 2024
 
@@ -190,9 +191,9 @@ Ho filtrato per i tag il dataset, modificandone alcuni
 ### Cosa ho fatto davvero
 
 Dopo circa 3 ore sono riuscito a fare la mappa (anche se devo ancora capire come
-renderla cliccabile). Ho prima provato a disegnarla con i metodi fatti,
+renderla cliccabile). Ho prima provato a disegnarla cercando le mappe sui siti visti,
 ma ho poi scoperto che plotly.express funziona senza dover importare mappe se
-si usa il globo. Molto divertente.
+si usa il globo. Molto divertente (salute mentale -10000).
 Ho continuato a lavorare sul file dataset.py, devo finire analisi tags
 e scrivere funzione che mi permetta di filtrare per tags. Ho in parte sistemato
 get_rec()
@@ -215,9 +216,12 @@ Aggiornamento: Ho dimenticato di fare il commit, ops
 
 Anno nuovo, la mappa continua a farmi impazzire, daje.
 Provo a farla diventare interattiva. Aggiornamento: ci sono riuscito
+(<https://open.spotify.com/track/27RYrbL6S02LNVhDWVl38b?si=5fbf52db21504c23>).
+
 Aggiunti inoltre vari aspetti grafici e collegamenti tra pagine in homepage.
-Ho inserito 2 finestre in recipes e il un rating sistem in recipe.
-Ho modificato la funzione get_rec() aggiungendo tutta la parte di filtro.
+Ho inserito 2 finestre in recipes e il un rating sistem in recipe,
+molto fiero di questa feature.
+Ho modificato la funzione get_rec() aggiungendo tutta la parte di filtro per tags.
 
 ## 5 Gennaio 2024
 
@@ -230,19 +234,50 @@ aggiungendo i tags e rendendoli cliccabili. Ho generalizzato la funzione per
 filtrare la lista delle ricette per tutti i parametri. Ho inoltre sistemato
 la pagina con la lista di ricette, aggiungendo una finestra interattiva per
 aggiungere filtri. Ho creato un file cose.py per aggiungere vari test.
-Lo ho aggiunto come finestra sul sito, facendo uno pseudo login, che finirò poi
+Lo ho aggiunto come finestra sul sito, facendo uno pseudo login, che finirò poi (forse)
 
 **Commenti e problemi**: Devo sistemare bene tutto, guardando i problemi vari.
+
+## 9/11 Gennaio 2024
+
+**Obiettivi**: fare delle scelte di vita sul sito, sistemare il filtro del dataset,
+colloquio
+
+**domande**:
+
+- virgole in recipes
+- errore map elements
+- download datasets
+- caching
+- personalizzazione grafica con HTML
+- o altre features
+  login, frequenza tags, tell me who you are and i'll tell you if you'll order takeout
+
+### Cosa ho fatto davvero
+
+Riposte: per risolvere le virgole devo vanificare tutto il lavoro di filtro sui dataset.
+Bene. I'm fine, totally fine. Lascerò in pedice a datasets.py tutto il lavoro.
+Per il download dei dati si può fare da kagglehub o dropbox.
+Vado di personalizzazione grafica con HTML (let's pray).
+Ho continuato a lavorare sul sito ma non funziona bene, ci sono un po' di errori.
+Ho dovuto creare un nuovo file recipes_list.py perché quello recipes.py
+dava problemi inspiegabili ed è passato a miglior vita.
+Ho messo le references nel sito to get a win today
+**Problemi**:
+
+- Non riesco a aggiornare il codice per filtrare il dataset con json.
+- Il carosello non salva i tag nella session state (yay)
+- Per qualche motivo l'app crasha su recipes
+
+Insomma, bene considerato che mancano 4 giorni alla consegna
 
 ## todos
 
 - aggiungere settings colore
 - guarda percorsi assoluti
 - guarda per references (magari in piccolo sul sito)
+- cambiare il get list, dividere in tags e ingredienti così da fare caching
 
-## domande
-
-- virgole in recipes
-- numerosità ricette
-- personalizzazione grafica con HTML
-- download datasets
+Multiselect
+mi serve inserire in uv i pacchetti standard di py o sono già compresi nella versione?
+Perchè mi da errore
