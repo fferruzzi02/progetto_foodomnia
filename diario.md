@@ -263,6 +263,7 @@ Ho continuato a lavorare sul sito ma non funziona bene, ci sono un po' di errori
 Ho dovuto creare un nuovo file recipes_list.py perché quello recipes.py
 dava problemi inspiegabili ed è passato a miglior vita.
 Ho messo le references nel sito to get a win today
+
 **Problemi**:
 
 - Non riesco a aggiornare il codice per filtrare il dataset con json.
@@ -271,13 +272,40 @@ Ho messo le references nel sito to get a win today
 
 Insomma, bene considerato che mancano 4 giorni alla consegna
 
+## 12 Gennaio 2024
+
+**Obiettivi**: sisemare ed arrivare a struttura finale e risolvere i problemi
+(o almeno segnarli per il colloquio lol)
+
+### Cosa ho fatto davvero
+
+Ho eliminato tutte le cose superflue (tra cui le funzioni e l'analisi del
+dataset nutri, con info nutrizionale), principalmente perché non c'erano
+abbastanza match con gli ingrednienti (volevo collegare una pagina con
+info nutrizionali per ogni ingrediente).
+Ho inoltre creato la funzione di login, messo a posto la pagina iniziale
+e inserito il carosello e tutto il resto. Dovrò aggiungere ricette della settimana
+(che cambiano con il giorno)
+Ho anche sistemato la funzione recipes_list perchè non funzionava per gli ingredienti.
+Ho diviso quindi il filtering per ingrediente e quello per tutto il resto.
+Studiato il dataset, ho studiato il range di numero di steps e di passaggi.
+Ho sistemato del tutto la pagina delle ricette per ingredienti (molto carina va detto).
+Non funziona più la pagina con la lista di ricette, provo ad alleggerire il codice
+--> faccio selezionare un solo tag alla volta (per una volta mi semplifico la vita)
+Scherzone, avevo solamente dimenticato di salvare il codice (per ridurre numerosità
+ho usato il comando list(set(tags)), visto che c'erano valori ripetuti)
+Vabbè alla fine meglio fare la cosa di mettere un solo tag che qui non funziona
+nulla sembra Trenitalia.
+
+**domande**:
+
+- Non riesco a aggiornare il codice per filtrare il dataset con json.
+- Il carosello non salva i tag nella session state (yay)
+- Come faccio per i percorsi assoluti se uso download da kagglehub?
+- mi serve inserire in uv i pacchetti standard di py o sono già compresi nella versione?
+  Perchè mi da errore
+
 ## todos
 
-- aggiungere settings colore
+- aggiungere settings colore e in generale html
 - guarda percorsi assoluti
-- guarda per references (magari in piccolo sul sito)
-- cambiare il get list, dividere in tags e ingredienti così da fare caching
-
-Multiselect
-mi serve inserire in uv i pacchetti standard di py o sono già compresi nella versione?
-Perchè mi da errore

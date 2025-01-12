@@ -55,10 +55,3 @@ event = st.plotly_chart(fig, on_select="rerun", selection_mode=["points", "box",
 
 
 
-"""points = event["selection"].get("points", [])
-if points:
-    first_point = points[0]
-    sigla = first_point["properties"].get("sigla", None)
-else:
-    sigla = None
-"""

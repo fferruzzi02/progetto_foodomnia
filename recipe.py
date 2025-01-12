@@ -27,8 +27,6 @@ st.write(recipe["description"])
 st.divider()
 
 #todo: ingredienti
-#!da sistemare, nel dividere gli ingredienti nella lista ci sono virgole anche negli ingredienti
-#! vengono ingredienti spezzati
 st.write("ingredients")
 for i in range(len(recipe["ingredients"])):
     st.write("-",recipe["ingredients"][i])
@@ -46,15 +44,16 @@ st.divider()
 st.info('Did you like the recipe? Let us know!', icon=":material/stars:")
 stars = st.feedback("stars") 
 if stars: #se si lascia stelle si apre il form per lasciare recensione 
-    with st.form("leave your review!"):
-        st.write("review of the recipe: ",st.session_state.recipe)
-        nickname = st.text_input("your name")
-        title  = st.text_input("title of your review")
-        review = st.text_area("tell us more...")
-        if st.form_submit_button("send us your review"):
-            st.balloons()
-            st.success("Review sent correctly! Thank you for your time", icon=":material/reviews:")
+    if st.session_state.logged:
+        with st.form("leave your review!"):
+            st.write("review of the recipe: ",st.session_state.recipe)
+            nickname = st.text_input("your name")
+            title  = st.text_input("title of your review")
+            review = st.text_area("tell us more...")
+            if st.form_submit_button("send us your review"):
+                st.balloons()
+                st.success("Review sent correctly! Thank you for your time", icon=":material/reviews:")
+    else:
+        st.error("login if you want to write a review!")
 
-
-#todo: salvare in un file le review (forse) e farle apparire sotto la ricetta 
- 
+    
