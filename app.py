@@ -56,7 +56,7 @@ if st.sidebar.button("Recipes on a diet", icon = ":material/no_food:", help = "h
 
 #*inserisco  nello state la possibilità di essere admin, come controllo per me per il sito
 if 'privilege' not in st.session_state:
-    st.session_state.privilege = "admin" #se voglio vedere che ci sia tutto cambio qui 
+    st.session_state.privilege = "guest" #se voglio vedere che ci sia tutto cambio qui 
 
 
 if st.session_state.privilege == "guest":
