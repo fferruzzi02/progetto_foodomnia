@@ -2,8 +2,7 @@
 
 import streamlit as st
 import functions 
-
-st.title("ingredients checklist")
+st.markdown("<h1 style='text-align: center;'>Ingredients checklist</h1>", unsafe_allow_html=True)
 st.divider()
 st.info("select what you have in the fridge, we'll find a recipe")
 st.divider()
@@ -11,7 +10,7 @@ st.session_state.ingredients = str()
 lst = functions.get_ingr()
 ingr = st.multiselect("select the ingredients", lst, default=[])
 
-if st.button("search for recipes!"):
+if st.button("search for recipes!", type = "primary"):
     st.session_state.ingredients = ingr
 
 @st.fragment() #*frammento che trova ricette
@@ -57,7 +56,7 @@ def find():
                 st.switch_page("recipe.py")
             st.divider()
 
-        for i in range(15):
+        for i in range(15, 30):
             if col2.button(lst[index], key = index, help = f"{lst[index]} recipe"):
                 st.session_state.recipe  = lst[index]
                 st.switch_page("recipe.py")
@@ -74,3 +73,6 @@ if st.session_state.ingredients:
     
 else: 
     st.write("no ingredients selected!")
+
+
+    

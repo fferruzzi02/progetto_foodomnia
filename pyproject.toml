@@ -5,7 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "kagglehub>=0.3.4",
+    "altair>=5.4.1",
+    "colorspace>=1.0.0",
+    "datetime>=5.5",
+    "icecream>=2.1.4",
+    "kagglehub>=0.3.6",
+    "pathlib>=1.0.1",
     "plotly-express>=0.4.1",
     "polars>=1.14.0",
     "pycountry>=24.6.1",

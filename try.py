@@ -1,57 +1,23 @@
-import streamlit as st
-import polars as pl
-import plotly.express as px
-import pycountry 
-import datasets
-
-dem = pl.read_csv("Demonyms.csv")
-rec = datasets.get_rec()
-search = rec.select(pl.col("tags").list.explode())
-search = search["tags"].to_list()
-type(search)
-demonyms = dem["Demonym"].to_list() #lista demonimi 
-sta = dem["State"].to_list() #lista stati 
-
-lc_demonyms = [item.lower() for item in demonyms]
 
 
-states_dishes = {} 
-for el in search:
-    if el in lc_demonyms:
-        if el in states_dishes: 
-            states_dishes[el] += 1
-        else:
-            states_dishes[el] = 1
-states_dishes 
-#aggiungiamo quelli mancanti 
+#*file con codice in più utilizzato per fare prove varie
+#colori sito 
+#006769
+#40A578
+#9DDE8B
+#FFFFFF
 
-for el in lc_demonyms:
-    if el not in states_dishes:
-        states_dishes[el] = 0
-   
-lst = []
-for i in range(len(sta)):
-    x = []
-    x.append(sta[i])
-    x.append(lc_demonyms[i])
-    code = pycountry.countries.search_fuzzy(sta[i])[0].alpha_3
-    x.append(code)
-    num = states_dishes[lc_demonyms[i]]
-    x.append(num)
-    lst.append(x)
+import colorspace 
+pal = colorspace.hcl_palettes().get_palette("ag_GrnYl")  
 
-#ddf con stato demonym, ... 
-df = pl.DataFrame(
-    lst,
-    schema=["state", "demonym", "code", "counter"]
-)
-
-
-fig = px.choropleth(df, locations="code",
-                    color="counter",
-                    color_continuous_scale="viridis") 
-
-event = st.plotly_chart(fig, on_select="rerun", selection_mode=["points", "box", "lasso"])
-
-
-
+colorspace.specplot(pal(60))
+pal(4)
+colorspace.specplot(colorspace.deutan(pal(60)))
+colorspace.contrast_ratio(pal(4), bg="black", plot=True)
+colorspace.contrast_ratio(["#006769", "#40A578", "#9DDE8B", "#E6FF94"], plot = True, bg = "#006769")
+#bene con "#9DDE8B", "#E6FF94"
+colorspace.contrast_ratio(["#006769", "#40A578", "#9DDE8B", "#E6FF94"], plot = True, bg = "#40A578") #meh, non lo userei come sfondo
+colorspace.contrast_ratio(["#006769", "#40A578", "#9DDE8B", "#E6FF94"], plot = True, bg = "#9DDE8B") #questo solo con #006769
+colorspace.contrast_ratio(["#006769", "#40A578", "#9DDE8B", "#E6FF94"], plot = True, bg = "#E6FF94") #nemmeno questo 
+colorspace.contrast_ratio(["#006769", "#40A578", "#9DDE8B", "#FFFFFF"], plot = True, bg = "#006769")
+#con bianco ancora meglio, più leggibile 

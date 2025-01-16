@@ -2,7 +2,10 @@
 
 ## idea progetto
 
-L'obiettivo
+Il progetto vuole essere un sito che consiglia ricette rispetto agli ingredienti
+in frigo, con un modellino lineare che preveda, rispetto a genere ed età,
+la probabilità di ordinare cibo invece di cucinare.
+Inoltre si vuole aggiungere una sezione con le informazioni nutrizionali degli ingredienti
 
 ## informazioni generali
 
@@ -75,7 +78,7 @@ Ma non so come aprire la mappa numeri-ingredienti -->
 provo a farli tornare normale (file try.py)
 In realtà mi sono impelagato nel nulla, nel file recipes RAW ci sono gli ingredienti
 Elimino tutti i file non necessari, rimango solo con RAW_recipes.csv
-Non avendo più tempo faccio il push --> il file RAW_recipes è troppo grande, daje
+Non avendo più tempo faccio il push --> il file RAW_recipes è troppo grande
 
 **Commenti e problemi**:
 
@@ -214,7 +217,7 @@ Aggiornamento: Ho dimenticato di fare il commit, ops
 
 ### Cosa ho fatto davvero
 
-Anno nuovo, la mappa continua a farmi impazzire, daje.
+Anno nuovo, la mappa continua a farmi impazzire.
 Provo a farla diventare interattiva. Aggiornamento: ci sono riuscito
 (<https://open.spotify.com/track/27RYrbL6S02LNVhDWVl38b?si=5fbf52db21504c23>).
 
@@ -297,15 +300,25 @@ ho usato il comando list(set(tags)), visto che c'erano valori ripetuti)
 Vabbè alla fine meglio fare la cosa di mettere un solo tag che qui non funziona
 nulla sembra Trenitalia.
 
-**domande**:
+## 13/15 Gennaio 2024
 
-- Non riesco a aggiornare il codice per filtrare il dataset con json.
-- Il carosello non salva i tag nella session state (yay)
-- Come faccio per i percorsi assoluti se uso download da kagglehub?
-- mi serve inserire in uv i pacchetti standard di py o sono già compresi nella versione?
-  Perchè mi da errore
+**Obiettivi**: finire il sito (ma vah)
 
-## todos
+### Cosa ho fatto davvero
 
-- aggiungere settings colore e in generale html
-- guarda percorsi assoluti
+Dopo il colloquio ho sistemato il codice per filtrare dataset e trovato una
+scala colori che fosse da sito di cucina, con colore principale verde,
+associato al benessere (molti siti di ricette usano invece il nero per
+far trasparire professionalità, per questo lo sfondo scuro e il verde petrolio)
+Ho dovuto perdere 2 ore perché in "steps" non risciva a applicare json
+(forse per stringhe con caratteri in codice). Ho risolto in maniera artistica.
+I colori continua a non farmeli mettere mannaggia alla vita.
+Ho aggiunto la ricetta del giorno
+Aggiornato i colori di vs code in modo da essere matchati con la palette del sito
+(essenziale).
+Ho fatto una parte di analisi sui dati nella pagina infos, molto meme
+
+## 16 Gennaio 2024
+
+Aggiornamento: i colori funzionano a volte si a volte no (bizzarre).
+Ho sistemato un paio di piccoli problemi (tra cui bottoni che non funzionavano)

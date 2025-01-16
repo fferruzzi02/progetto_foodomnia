@@ -1,6 +1,9 @@
 import streamlit as st
 import polars as pl
 import functions
+import math
+
+#*rendering ricetta 
 
 #la ricetta importata è quella che si trova nella session state
 recipe = functions.select_recipe(st.session_state.recipe)
@@ -13,34 +16,64 @@ st.session_state.recipe = name #cambio lo state di recipe, così rimane nella si
 st.title(f"{name} recipe")
 st.divider()
 
-
-#todo: scrivere i tag uno dopo l'altro, cliccabili così da avere link ad altre ricette
-#col = st.columns(len(recipe["tags"]))
-#st.columns
-#for i in range(len(col)):
-#    with col[i]:
-#       st.button(recipe["tags"][i])
-
-
-#todo: descrizione
+#*descrizione
 st.write(recipe["description"])
 st.divider()
 
-#todo: ingredienti
-st.write("ingredients")
-for i in range(len(recipe["ingredients"])):
-    st.write("-",recipe["ingredients"][i])
+#* tags
+st.subheader("tags")
+lst = recipe["tags"]
+nrows = math.ceil(len(lst)/4)  #e calcolo le righe (arrotondo a intero superiore)
+col = st.columns(4, vertical_alignment= "center") 
+count = 0 
+for nrow in range(nrows): #riempio griglia
+        for ncol in range(4):
+            if count < len(lst):         
+                val = col[ncol].button(lst[count]) #se clicco cambio pagina
+                if val: 
+                    st.session_state.tags = lst[count]
+                    st.switch_page("recipes_list.py")
+                count += 1
 st.divider()
 
-#todo: steps
-st.write("steps:")
-for i in range(len(recipe["steps"])):
-    st.write(i+1, recipe["steps"][i])
 
+
+
+#*porzioni
+col1, col2 = st.columns(2)
+n = recipe["servings"]
+g = recipe["serving_size"]
+col1.button(f"servings: {n}", use_container_width=True)
+col2.button(f"serving size: {g}", use_container_width=True)
+st.divider()
+
+#*ingredienti
+st.subheader("ingredients")
+for ingr in recipe["ingredients"]:
+    if ingr:
+        st.write("-",ingr)
+st.divider()
+
+#*steps
+#nb scritti così in modo da mandare a capo al  momento giusto, altrimenti non funzionava
+st.subheader("steps:")
+counter = 0
+x = ""
+for i in recipe["steps"]:
+    if i == '\"':
+        counter += 1
+    else:
+        if counter == 2:
+            st.write(x)
+            x = ""
+            counter = 0
+        else:
+            x += i
+        
 st.divider()
 
 
-#todo: feedback sotto le ricette
+#*feedback sotto le ricette
 st.info('Did you like the recipe? Let us know!', icon=":material/stars:")
 stars = st.feedback("stars") 
 if stars: #se si lascia stelle si apre il form per lasciare recensione 

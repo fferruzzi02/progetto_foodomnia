@@ -1,5 +1,6 @@
 #entrypoint file
 import streamlit as st
+import functions
 import random
 
 #*inizializzo session state da subito, così non rischio problemi
@@ -11,8 +12,8 @@ if "ingredients" not in st.session_state:
     st.session_state.ingredients = []
 if "servings" not in st.session_state:
     st.session_state.servings = 0
-if "steps" not in st.session_state:
-    st.session_state.steps = 0
+if "portion" not in st.session_state:
+    st.session_state.portion = 0
 if "tags" not in st.session_state:
     st.session_state.tags = str()
 if "logged" not in st.session_state:
@@ -35,36 +36,34 @@ recipe = st.Page(
 ingredients = st.Page(
      "ingredients.py", title="select ingredients", icon=":material/lists:")
 
-cose = st.Page(
-    "cose.py", title="prova", icon=":material/login:" )
+info = st.Page(
+    "info.py", title="project informations", icon=":material/query_stats:")
 
 
 #* vari bottoni 
-if st.sidebar.button("I want a random recipe!"): #ricetta random 
+if st.sidebar.button("I want a random recipe!", help = "random recipe"): #ricetta random 
         st.session_state.recipe = "random"
         st.switch_page("recipe.py")
 
-if st.sidebar.button("Holiday recipes", icon = ":material/celebration:"): #ricette festive (un tag a caso)
-        st.session_state.tags = random.choice(["birthday","halloween", "new-years", "thanksgiving", "hanukkah", "valentines-day", "christmas", "cinco-de-mayo"])
+if st.sidebar.button("Holiday recipes", icon = ":material/celebration:", help = "the nearest festivity's dishes"): #ricette festive (un tag a caso)
+        st.session_state.tags = functions.festivities()
         st.switch_page("recipes_list.py")
-    #!forse selezionando festività più vicina 
 
-if st.sidebar.button("Recipes on a diet", icon = ":material/no_food:"): #ricette dietetiche (un tag a caso)
-        st.session_state.tags =  random.choice(["low-cholesterol", "diet", "healthy", "lowfat", "nofat", "nosugar", "low-sugar", "low-calorie", "low-carb", "nocarb"])
+if st.sidebar.button("Recipes on a diet", icon = ":material/no_food:", help = "healhy and low cal foods"): #ricette dietetiche (un tag a caso)
+        st.session_state.tags =  random.choice(["low-cholesterol", "diet", "healthy", "low-fat", "nofat", "nosugar", "low-sugar", "low-calorie", "low-carb", "nocarb"])
         st.switch_page("recipes_list.py")
 
 
 #*inserisco  nello state la possibilità di essere admin, come controllo per me per il sito
 if 'privilege' not in st.session_state:
     st.session_state.privilege = "admin" #se voglio vedere che ci sia tutto cambio qui 
-  
-if st.session_state.privilege == "admin": 
-    pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe, cose]})
 
-if not st.session_state.logged:
+
+if st.session_state.privilege == "guest":
     pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe]})
 
-
+if st.session_state.privilege == "admin": 
+    pg = st.navigation({"pages":[homepage, recipes, ingredients, recipe, info]})
 
 
 st.sidebar.divider()
@@ -72,8 +71,7 @@ st.sidebar.divider()
 
 #se l'utente ha fatto l'accesso
 if st.session_state.credentials: 
-    st.sidebar.write(f"welcome back {st.session_state.credentials}!")
-    st.divider()
+    st.sidebar.write(f"Welcome back {st.session_state.credentials}!")
 
 #altrimenti    
 if not st.session_state.logged:
@@ -84,9 +82,13 @@ if not st.session_state.logged:
             name = st.text_input("NAME")
             pssw = st.text_input("PASSWORD", type = "password")
             if st.form_submit_button("LOGIN", icon=":material/login:"):
-                st.session_state.logged = True
-                st.session_state.credentials = name 
-                st.rerun()
+                if not name or not pssw:
+                     st.sidebar.error("insert a name and a password!")
+                elif name and pssw:
+                    st.session_state.logged = True
+                    st.session_state.credentials = name 
+                    st.rerun()
+                
 
 
 if st.session_state.logged:
@@ -98,8 +100,13 @@ if st.session_state.logged:
 
 st.sidebar.divider()
 #citations al dataset
-st.sidebar.caption("All the data are from https://www.kaggle.com/datasets/shuyangli94/foodcom-recipes-with-search-terms-and-tags/data")
-st.sidebar.caption("Author Name: Shuyang Li")
+st.sidebar.write("Project by: Francesco Ferruzzi")
+if st.sidebar.button("press me if you want to know more", type = "primary"):
+    st.session_state.privilege = "admin" #se voglio vedere che ci sia tutto cambio qui 
+    st.rerun()
+st.sidebar.write("Data by: Shuyang Li")
+
+
 
 pg.run()
 

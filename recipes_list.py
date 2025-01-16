@@ -1,8 +1,7 @@
 import streamlit as st
 import functions
-import random
 
-st.title("list of recipes")
+st.markdown("<h1 style='text-align: center;'>List of recipes</h1>", unsafe_allow_html=True)
 st.divider()
 
 #*widget per cercare ricette con filtri
@@ -13,10 +12,10 @@ if col2.button("", help = "remove filters", icon = ":material/delete:"): #botton
     search = False #chiudo search (anche se il toggle non cambia)
     st.session_state.name = str()
     st.session_state.servings = int(0)
-    st.session_state.steps = int(0)
+    st.session_state.portion = int(0)
     st.session_state.tags = str()
       
-filter = [st.session_state.name,st.session_state.servings,st.session_state.steps,st.session_state.tags]
+filter = [st.session_state.name,st.session_state.servings,st.session_state.portion,st.session_state.tags]
  #creo variabile filter (che poi uso per ricerca ricette)
 
 if search: #se schiacchio research apro research
@@ -28,8 +27,8 @@ st.divider()
 col1, col2 = st.columns(2)
 if st.session_state.name:
         col1.info(f"searching recipes containing '{st.session_state.name}' in the name")
-if st.session_state.steps:
-        col2.info(f"searching recipes with {st.session_state.steps} steps")
+if st.session_state.portion:
+        col2.info(f"searching recipes with a portion of {st.session_state.portion} grams")
 if st.session_state.servings:
         col1.info(f"searching recipes with {st.session_state.servings} servings")
 if st.session_state.tags:
@@ -37,20 +36,10 @@ if st.session_state.tags:
 
 
 if not any(filter):  #se non ci sono filtri 
-    st.info("no filter applied. Selecting 30 random recipes!")
-    #seleziono random 20 ricette 
-    st.divider()
-    col1,a, col2 = st.columns([10,1,10], vertical_alignment="center")
-    lst = functions.recipes_list()
-    for i in range(15):
-        index = random.randint(0, 80098)
-        col1.button(lst[index], key = i, help = f"{lst[index]} recipe")
-        col1.divider()
-    for i in range(15,30):
-        index = random.randint(0, 80098)
-        col2.button(lst[index], key = i, help = f"{lst[index]} recipe")
-        col2.divider()
-
+    st.info("no filter applied! Search for something!")
+    if st.button("random recipe", help = "get to a random recipe", use_container_width=True, type = "primary"):
+        st.session_state.recipe = "random"
+        st.switch_page("recipe.py") 
 else:
     lst = functions.recipes_list(filter)
     if len(lst) == 0:
@@ -61,21 +50,29 @@ else:
         st.info("recipes with the selected filters!")
         col1,a, col2 = st.columns([10,1,10], vertical_alignment="center")
         for i in range(len(lst)//2):
-            col1.button(lst[i], key = i, help = f"{lst[i]} recipe")
+            if col1.button(lst[i], key = i, help = f"{lst[i]} recipe"):
+                st.session_state.recipe = lst[i]
+                st.switch_page("recipe.py")                 
             col1.divider()
         
         for i in range(len(lst)//2, len(lst)):
-            col2.button(lst[i], key = i, help = f"{lst[i]} recipe")
+            if col2.button(lst[i], key = i, help = f"{lst[i]} recipe"):
+                st.session_state.recipe = lst[i]
+                st.switch_page("recipe.py")
             col2.divider()
 
     if len(lst) > 30:
         st.info("30 random recipes with the filters you selected!")
         col1,a, col2 = st.columns([10,1,10], vertical_alignment="center")
         for i in range(15):
-            col1.button(lst[i], key = i, help = f"{lst[i]} recipe")
+            if col1.button(lst[i], key = i, help = f"{lst[i]} recipe"):
+                st.session_state.recipe = lst[i]
+                st.switch_page("recipe.py")
             col1.divider()
         for i in range(15,30):
-            col2.button(lst[i], key = i, help = f"{lst[i]} recipe")
+            if col2.button(lst[i], key = i, help = f"{lst[i]} recipe"):
+                st.session_state.recipe = lst[i]
+                st.switch_page("recipe.py")
             col2.divider()
 
 

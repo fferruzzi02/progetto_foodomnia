@@ -1,35 +1,35 @@
 import polars as pl
-import json
 import streamlit as st
 import kagglehub 
-
-
-x =  "['a', 'a']"
-json.loads(x.replace("'",'"'))
+from pathlib import Path
 
 #todo: funzione per ottenere il dataset ricette
 @st.cache_data #essendo le operazioni con polars costose
 def get_rec():
     path = kagglehub.dataset_download("shuyangli94/foodcom-recipes-with-search-terms-and-tags")
     path += "/recipes_w_search_terms.csv"
-    rec = pl.read_csv(path) #prendo il dataset 
-    #rec = pl.read_csv("recipes.csv") #prendo il dataset 
-    
+    p = Path(path)
+    rec = pl.read_csv(p) #prendo il dataset 
     #*pulizia per colonna 
     rec = rec.with_columns(
         (pl.col("search_terms") + "," + pl.col("tags")).alias("tags"))
     #unisco tags e search_terms, sono simili e averli in due colonne non serve
-    rec = rec.select(pl.col("*").exclude("search_terms")) #elimino search terms 
-
+    rec = rec.select(pl.col("*").exclude("search_terms", "id")) #elimino search terms 
+    rec = rec.with_columns(pl.col("serving_size").str.extract(r"\((\d+) g\)", 1).alias("serving_size").cast(pl.Int32)) #per serving size mantengo solo i grammi (così da avere numero invece di stringa)
     #ho il problema che il type delle colonne con liste è String + i tags hanno spazi e robaccia varia 
     #rimuovo gli elementi superflui per farlo diventare list(String)
-    rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all(r"[\[\]'{}()]", "").str.split(","))
-    rec = rec.with_columns(pl.col("serving_size").str.replace_all("g1()", "")) #non funziona più porco gesù
+    rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all("'",'"'))
+    rec = rec.with_columns(pl.col("ingredients").str.json_decode())
+    rec = rec.with_columns(pl.col("ingredients_raw_str").str.json_decode())
+    rec = rec.with_columns(pl.col("steps").str.replace_all(r"[\[\]'\{\}\(\)]",""))
     rec = rec.with_columns(pl.col("tags").str.replace_all(r"[\[\]'\{\}\(\)\s]", "").str.split(","))
     
     #*pulizia per riga
     #elimino righe con valori nulli
     rec = rec.filter(pl.col("description").is_not_null()) #descrizioni null
+
+    #elimino righe con 0 grammi 
+    rec = rec.filter(pl.col("serving_size")!=0)
 
     #elimino ricette che non hanno tra i tags gli stati
     dem = pl.read_csv("Demonyms.csv") #apro dataset 
@@ -81,19 +81,30 @@ def get_rec():
 if __name__ == '__main__':
     #*controllo del dataset 
     rec = get_rec()
-    print("rec")
+    rec1 = rec.filter(pl.col("tags").list.contains("christmas"))
+    print(rec1["ingredients"].to_list())
+    print(rec1["tags"].to_list())
+    print(rec1["ingredients"].to_list())
+    print(type(rec1["ingredients"].to_list()[0]))
+    rec.filter(pl.col("serving_size")== 0) #controllo di aver tolto i null
+
+    #analisi utile
     rec.select(pl.col("servings").max()) #un pelo tanto
     rec.select(pl.col("servings")).describe()
     #servings da 1 a 10  (quello da 830 direi lo ignoriamo)
     rec.filter(pl.col("servings") == 830) #that's a damn big pie
 
-    rec.select(pl.col("steps").list.len().max())
-    rec.select(pl.col("steps").list.len()).describe()
-    rec.filter(pl.col("steps").list.len() >50)
-    #steps fino a 50 va bene (di più il filtro non ha senso)
+    print(rec.select(pl.col("serving_size")).describe())
 
     #analisi dataset 
-    rec = pl.read_csv("recipes.csv")
+    """rec = pl.read_csv("recipes.csv")
+    from icecream import ic 
+    rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all("'",'"'))
+    reccc = rec.with_columns(
+        pl.col("ingredients").map_elements(
+            lambda ingredients: json.loads(ic(ingredients))
+    ))
+
     print(rec.head())
     print(rec.dtypes) 
     print(rec.columns)
@@ -105,20 +116,11 @@ if __name__ == '__main__':
     #!devo trasformare ingredients,  ingredients_raw_str, 'steps', 'tags'
     rec.select("serving_size") #ho un altro problema, qui dati doppi, ma posso eliminare 1 e le parentesi
     rec.select("tags") #qui usa pure graffe, posso tenere lista 
-
     print(rec.select(pl.col("ingredients").cast(pl.List,strict=False))) #se provo a trasformare mi crea valori null
-    
-
     rec = rec.with_columns(pl.col("ingredients", "ingredients_raw_str", "steps").str.replace_all("'",'"'))
-
-    reccc = rec.with_columns(
-        pl.col("ingredients").apply(
-            lambda ingredients: [json.loads(ingr) for ingr in ingredients]
-    ))
     reccc = rec.with_columns(
     rec["ingredients"].apply(json.loads)
 )
-
     rec = rec.with_columns(pl.col("serving_size").str.replace_all("g1()", "")) #non funziona più porco gesù
     rec = rec.with_columns(pl.col("tags").str.replace_all(r"[\[\]'\{\}\(\)\s]", "").str.split(","))
 
@@ -255,3 +257,4 @@ if __name__ == '__main__':
     oth = ("heirloom-historical-recipes", "60-minutes-or-less", "30-minutes-or-less", "15-minutes-or-less", "for-1-or-2", "summer", "romantic", "inexpensive", "beginner-cook", "easy")
 
 
+"""
