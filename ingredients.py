@@ -51,13 +51,13 @@ def find():
         index = random.randint(0, len(lst))
         col1,a, col2 = st.columns([10,1,10], vertical_alignment="center")
         for i in range(15):
-            if col1.button(lst[index], key = index, help = f"{lst[index]} recipe"):
+            if col1.button(lst[index], key = i, help = f"{lst[index]} recipe"):
                 st.session_state.recipe  = lst[index]
                 st.switch_page("recipe.py")
             st.divider()
 
         for i in range(15, 30):
-            if col2.button(lst[index], key = index, help = f"{lst[index]} recipe"):
+            if col2.button(lst[index], key = i, help = f"{lst[index]} recipe"):
                 st.session_state.recipe  = lst[index]
                 st.switch_page("recipe.py")
             st.divider()
